@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}Shop - UrbanCart{% endblock %}
+{% block content %}
+{% load static %}
+
+<style>
+  .product-card {
+    background: #232323;
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.10);
+    transition: 0.3s;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .product-image {
+    height: 220px;
+    width: 100%;
+    object-fit: contain;
+    background: #181818;
+    border: 1.5px solid #333;
+    border-radius: 18px 18px 0 0;
+    padding: 10px;
+    display: block;
+  }
+
+  .product-title {
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .product-category {
+    color: #d6001c;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .product-description {
+    color: #ccc;
+  }
+
+  .product-price {
+    color: #d6001c;
+  }
+
+  .no-products-alert {
+    background: #232323;
+    color: #fff;
+    border: none;
+  }
+
+  .view-details-btn {
+    font-size: 0.95rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    min-width: 120px;
+  }
+</style>
+
+<div class="main-content">
+
+  <div class="row g-4">
+
+
+{% for product in products %}
+
+<div class="col-12 col-md-6 col-lg-4">
+
+  <div class="card h-100 product-card">
+
+    {% if product.image %}
+      <img src="{{ product.image.url }}"
+           class="card-img-top product-image"
+           alt="{{ product.name }}">
+    {% else %}
+      <img src="{% static 'AWD.png' %}"
+           class="card-img-top product-image"
+           alt="No Image">
+    {% endif %}
+
+    <div class="card-body d-flex flex-column">
+
+      <h5 class="card-title product-title">
+        {{ product.name }}
+      </h5>
+
+      <p class="product-category">
+        📂 {{ product.category }}
+      </p>
+
+      <p class="card-text product-description">
+        {{ product.description|truncatechars:80 }}
+      </p>
+
+      <div class="mb-3">
+
+        <span class="fw-bold fs-5 product-price">
+          ₹{{ product.price }}
+        </span>
+
+        {% if product.warranty %}
+        <span class="badge bg-danger ms-2">
+          Warranty: {{ product.warranty }} month{% if product.warranty|add:'-1' %}s{% endif %}
+        </span>
+        {% endif %}
+
+      </div>
+
+      <div class="mt-auto text-center">
+
+        <a href="{% url 'product_detail' product.id %}"
+           class="btn btn-cta btn-sm px-4 view-details-btn">
+           View Details
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+  <div class="alert alert-info text-center no-products-alert">
+    No products available.
+  </div>
+</div>
+
+{% endfor %}
+
+
+  </div>
+
+</div>
+
+{% endblock %}

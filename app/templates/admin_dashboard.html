@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - UrbanCart{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+
+<h2 class="text-center mb-4"
+    style="color:#d6001c;font-weight:bold;">
+    📊 Admin Dashboard
+</h2>
+
+<div class="card"
+     style="
+        background:#232323;
+        border:none;
+        border-radius:20px;
+        padding:20px;
+     ">
+
+    <div style="
+        width:300px;
+        height:300px;
+        margin:auto;
+    ">
+        <canvas id="dashboardChart"></canvas>
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-dark text-white text-center shadow">
+            <div class="card-body">
+                <h5>👥 Users</h5>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-dark text-white text-center shadow">
+            <div class="card-body">
+                <h5>📦 Products</h5>
+                <h2>{{ total_products }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-dark text-white text-center shadow">
+            <div class="card-body">
+                <h5>🛒 Orders</h5>
+                <h2>{{ total_orders }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card bg-dark text-white text-center shadow">
+            <div class="card-body">
+                <h5>💰 Revenue</h5>
+                <h2>₹{{ total_revenue }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h3 class="mt-5 mb-3" style="color:#d6001c;">
+    Recent Orders
+</h3>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for order in recent_orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.date }}</td>
+            <td>₹{{ order.totalamount }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No orders found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="mt-5 mb-3" style="color:#d6001c;">
+    Top Selling Products
+</h3>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Units Sold</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for product in top_products %}
+        <tr>
+            <td>{{ product.product__name }}</td>
+            <td>{{ product.total_sold }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No sales data available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const totalUsers = Number("{{ total_users|default:0 }}");
+const totalProducts = Number("{{ total_products|default:0 }}");
+const totalOrders = Number("{{ total_orders|default:0 }}");
+
+new Chart(
+    document.getElementById('dashboardChart'),
+    {
+        type: 'doughnut',
+
+        data: {
+            labels: [
+                'Users',
+                'Products',
+                'Orders'
+            ],
+
+            datasets: [{
+                data: [
+                    totalUsers,
+                    totalProducts,
+                    totalOrders
+                ],
+
+                backgroundColor: [
+                    '#ff6384',
+                    '#36a2eb',
+                    '#ffce56'
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    }
+);
+</script>
+
+{% endblock %}

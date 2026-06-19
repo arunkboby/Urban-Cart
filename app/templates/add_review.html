@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Write Review - UrbanCart{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card" style="background:#232323; color:#fff; border:none; border-radius:18px;">
+      <div class="card-body">
+        <h2 class="mb-4 text-center" style="color:#d6001c;">
+          Write Product Review
+        </h2>
+
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Rating</label>
+        <select class="form-control" name="rating" required>
+          <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+          <option value="4">⭐⭐⭐⭐ (4)</option>
+          <option value="3">⭐⭐⭐ (3)</option>
+          <option value="2">⭐⭐ (2)</option>
+          <option value="1">⭐ (1)</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Review</label>
+        <textarea class="form-control"
+                  name="review"
+                  rows="5"
+                  placeholder="Write your review here..."
+                  required></textarea>
+      </div>
+
+      <button type="submit"
+              class="btn btn-danger w-100"
+              style="background:#d6001c; border:none;">
+        Submit Review
+      </button>
+    </form>
+  </div>
+</div>
+
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - UrbanCart{% endblock %}
+
+{% block content %}
+<style>
+.zoom-container{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    border-radius:15px;
+}
+
+.zoom-image{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:20px;
+    transition:transform 0.4s ease;
+    cursor:pointer;
+}
+
+.zoom-image{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:20px;
+    cursor:none;
+}
+</style>
+<div class="container py-5">
+
+
+<div class="card shadow-lg"
+     style="background:#232323; color:white; border:none; border-radius:20px;">
+
+    <div class="card-body p-4">
+
+        <div class="row">
+
+            <!-- Product Image -->
+            <div class="col-md-5 mb-4">
+
+                <div class="text-center"
+                     style="
+                        height:400px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:#181818;
+                        border-radius:15px;
+                     ">
+
+                    {% if product.image %}
+                    <div class="zoom-container">
+
+
+                    <img src="{{ product.image.url }}"
+                        class="zoom-image"
+                        style="
+                            width:100%;
+                            height:100%;
+                            object-fit:contain;
+                            padding:20px;
+                        ">
+
+
+                      </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-md-7">
+
+                <h1 style="color:#d6001c; font-weight:bold;">
+                    {{ product.name }}
+                </h1>
+
+                <h2 class="mb-3">
+                    ₹{{ product.price }}
+                </h2>
+
+                {% if product.warranty %}
+                <p>
+                    <strong>Warranty:</strong>
+                    {{ product.warranty }} Months
+                </p>
+                {% endif %}
+
+                {% if product.seller %}
+                <p>
+                    <strong>Seller:</strong>
+                    {{ product.seller.username }}
+                </p>
+                {% endif %}
+
+                <h4 class="mt-4" style="color:#d6001c;">
+                    Product Description
+                </h4>
+
+                <div style="
+                    max-height:350px;
+                    overflow-y:auto;
+                    background:#181818;
+                    padding:15px;
+                    border-radius:10px;
+                    border:1px solid #333;">
+                    {{ product.description|linebreaksbr }}
+                </div>
+
+                <form method="post"
+                      action="{% url 'addtocart' product.id %}"
+                      class="mt-4">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Quantity
+                        </label>
+
+                        <input type="number"
+                               name="quantity"
+                               value="1"
+                               min="1"
+                               class="form-control"
+                               style="max-width:150px;">
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-danger btn-lg w-100">
+                        Add to Cart
+                    </button>
+                    <a href="{% url 'add_to_wishlist' product.id %}"
+   class="btn btn-outline-light mt-2 w-100">
+    ❤️ Add to Wishlist
+</a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <hr class="my-5">
+
+        {% if user.is_authenticated %}
+
+        <h3 style="color:#d6001c;">
+            Write a Review
+        </h3>
+
+        <form method="POST"
+              action="{% url 'add_review' product.id %}">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Rating
+                </label>
+
+                <select class="form-control"
+                        name="rating"
+                        required>
+                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                    <option value="3">⭐⭐⭐ (3)</option>
+                    <option value="2">⭐⭐ (2)</option>
+                    <option value="1">⭐ (1)</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Review
+                </label>
+
+                <textarea class="form-control"
+                          name="review"
+                          rows="4"
+                          placeholder="Write your review..."
+                          required></textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-danger">
+                Submit Review
+            </button>
+
+        </form>
+
+        <hr class="my-5">
+
+        {% endif %}
+
+        <h3 style="color:#d6001c;">
+            Customer Reviews
+        </h3>
+
+        {% for review in reviews %}
+
+        <div class="card mt-3"
+             style="
+                background:#181818;
+                color:white;
+                border:none;
+                border-radius:12px;
+             ">
+
+            <div class="card-body">
+
+                <h5>{{ review.user.username }}</h5>
+
+                <p>
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ⭐
+                        {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p>{{ review.review }}</p>
+
+                <small class="text-secondary">
+                    {{ review.created_at }}
+                </small>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="alert alert-dark mt-3">
+            No reviews yet.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+</div>
+<hr class="my-5">
+
+<h3 style="color:#d6001c;">
+    Related Products
+</h3>
+
+<div class="row">
+
+{% for item in related_products %}
+
+<div class="col-md-3 mb-3">
+
+    <div class="card"
+         style="background:#181818;color:white;border:none;">
+
+        {% if item.image %}
+        <img src="{{ item.image.url }}"
+             style="
+                height:180px;
+                width:100%;
+                object-fit:contain;
+                padding:10px;">
+        {% endif %}
+
+        <div class="card-body text-center">
+
+            <h6>{{ item.name }}</h6>
+
+            <p>₹{{ item.price }}</p>
+
+            <a href="{% url 'product_detail' item.id %}"
+               class="btn btn-danger btn-sm">
+                View Product
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+<hr class="my-5">
+
+<h3 style="color:#d6001c;">
+    👀 Recently Viewed Products
+</h3>
+
+<div class="row">
+
+{% for item in recent_products %}
+
+<div class="col-md-3 mb-3">
+
+    <div class="card bg-dark text-white">
+
+        {% if item.image %}
+        <img src="{{ item.image.url }}"
+             style="height:180px;width:100%;object-fit:contain;">
+        {% endif %}
+
+        <div class="card-body text-center">
+
+            <h6>{{ item.name }}</h6>
+
+            <p>₹{{ item.price }}</p>
+
+            <a href="{% url 'product_detail' item.id %}"
+               class="btn btn-danger btn-sm">
+                View Product
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<style>
+.img-magnifier-glass{
+    position:absolute;
+    border:2px solid #d6001c;
+    border-radius:50%;
+
+    width:90px;
+    height:90px;
+
+    display:none;
+    background-repeat:no-repeat;
+
+    z-index:999;
+
+    pointer-events:none;
+
+    transition:
+        left 0.05s linear,
+        top 0.05s linear;
+
+    box-shadow:0 0 15px rgba(214,0,28,0.4);
+
+    background-color:rgba(255,255,255,0.05);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const img = document.querySelector(".zoom-image");
+
+    if(!img) return;
+
+    const glass = document.createElement("div");
+    glass.className = "img-magnifier-glass";
+
+    img.parentElement.style.position = "relative";
+    img.parentElement.appendChild(glass);
+
+    const zoom = 2;
+
+    glass.style.backgroundImage = `url('${img.src}')`;
+
+    img.addEventListener("mouseenter", function(){
+
+        glass.style.display = "block";
+
+        glass.style.backgroundSize =
+            (img.width * zoom) + "px " +
+            (img.height * zoom) + "px";
+
+    });
+
+    img.addEventListener("mouseleave", function(){
+        glass.style.display = "none";
+    });
+
+    img.addEventListener("mousemove", moveMagnifier);
+
+    function moveMagnifier(e){
+
+        const rect = img.getBoundingClientRect();
+
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+        glass.style.left = (x - 50) + "px";
+        glass.style.top = (y - 50) + "px";
+
+        glass.style.backgroundPosition =
+            "-" + ((x * zoom) - 50) + "px " +
+            "-" + ((y * zoom) - 50) + "px";
+    }
+
+});
+</script>
+{% endblock %}

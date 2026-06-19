@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+</head>
+<body>
+
+<h2>Select Payment Method</h2>
+
+<form action="{% url 'paynow' %}" method="post">
+    {% csrf_token %}
+
+    <input type="radio" name="payment" value="UPI" required>
+    <label>UPI</label><br>
+
+    <input type="radio" name="payment" value="Credit Card">
+    <label>Credit Card</label><br>
+
+    <input type="radio" name="payment" value="Debit Card">
+    <label>Debit Card</label><br>
+
+    <input type="radio" name="payment" value="COD">
+    <label>Cash On Delivery</label><br><br>
+
+    <button type="submit">Place Order</button>
+</form>
+
+</body>
+</html>
