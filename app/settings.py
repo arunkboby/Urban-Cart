@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url  # Optional, if you want to use DATABASE_URL env var for DB config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
@@ -67,28 +66,27 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'project.wsgi.application'
-
+WSGI_APPLICATION = 'app.wsgi.application'
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 
 # Database
 # Use DATABASE_URL env variable for production databases (Postgres, etc)
 # Fall back to SQLite for local development / testing
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.nqnmnhrjvscehsaqopzh',
+        'PASSWORD': 'arun@github321',
+        'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
+        'PORT': '6543',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-
+}
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -112,7 +110,7 @@ EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'urbancartmart@protonmail.com'
-EMAIL_HOST_PASSWORD = '0D4A84BEC3749919B7E43711C8CE082DAB9E'
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")'
 
 DEFAULT_FROM_EMAIL = 'UrbanCart Team <urbancartmart@protonmail.com>'
 # Internationalization
