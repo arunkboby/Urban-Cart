@@ -25,3 +25,4 @@ Thumbs.db
 *.docx
 $PROFILE.txt
 New Text Document.txt
+.env

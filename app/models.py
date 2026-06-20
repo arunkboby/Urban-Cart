@@ -10,10 +10,10 @@ class Register(AbstractUser):
         
 class Product(models.Model):
     seller = models.ForeignKey(Register, on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=20, null=True)
+    name = models.CharField(max_length=100, null=True)
     category = models.CharField(max_length=50, default="General")
     price = models.IntegerField(null=True)
-    description = models.CharField(max_length=100, null=True)
+    description = models.TextField(null=True)
     warranty = models.IntegerField(null=True)
     image = models.ImageField(upload_to="uploads/", null=True)
 

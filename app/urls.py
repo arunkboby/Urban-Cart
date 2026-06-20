@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from app import views
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
 
     path('', views.func, name="index"),
@@ -40,21 +42,27 @@ urlpatterns = [
     path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('review/<int:product_id>/',views.add_review,name='add_review'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
-    path(
-    'wishlist/',
-    views.wishlist_view,
-    name='wishlist'
-),
+        path(
+        'wishlist/',
+        views.wishlist_view,
+        name='wishlist'
+    ),
 
-path(
-    'wishlist/add/<int:product_id>/',
-    views.add_to_wishlist,
-    name='add_to_wishlist'
-),
-path(
-    'admin-dashboard/',
-    views.admin_dashboard,
-    name='admin_dashboard'
-),
+    path(
+        'wishlist/add/<int:product_id>/',
+        views.add_to_wishlist,
+        name='add_to_wishlist'
+    ),
+    path(
+        'admin-dashboard/',
+        views.admin_dashboard,
+        name='admin_dashboard'
+    ),
 ]
+
+urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
+    
 
