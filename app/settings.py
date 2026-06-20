@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres.nqnmnhrjvscehsaqopzh',
-        'PASSWORD': 'arun@github321',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
         'PORT': '6543',
         'OPTIONS': {
@@ -109,8 +109,8 @@ EMAIL_HOST = 'smtp.elasticemail.com'
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'urbancartmart@protonmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = 'UrbanCart Team <urbancartmart@protonmail.com>'
 # Internationalization
