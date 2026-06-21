@@ -30,7 +30,7 @@ def stripe_checkout(request):
     for item in cart:
         total += item.quantity * item.product.price
 
-    DOMAIN = "https://urbancart-e2mivwq1v-arunkboby-5258s-projects.vercel.app"
+        DOMAIN = request.build_absolute_uri("/")[:-1]
 
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
