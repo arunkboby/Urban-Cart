@@ -43,8 +43,10 @@ def stripe_checkout(request):
             'quantity': 1,
         }],
         mode='payment',
-        success_url='http://127.0.0.1:8000/payment-success/',
-        cancel_url='http://127.0.0.1:8000/displaycart/',
+            DOMAIN = "https://urbancart-5vuoc1pp9-arunkboby-5258s-projects.vercel.app"
+
+    success_url=f"{DOMAIN}/payment-success/"
+    cancel_url=f"{DOMAIN}/displaycart/"
     )
 
     return redirect(session.url)
