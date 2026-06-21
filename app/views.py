@@ -30,6 +30,8 @@ def stripe_checkout(request):
     for item in cart:
         total += item.quantity * item.product.price
 
+    DOMAIN = "https://urbancart-e2mivwq1v-arunkboby-5258s-projects.vercel.app"
+
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         line_items=[{
@@ -38,15 +40,13 @@ def stripe_checkout(request):
                 'product_data': {
                     'name': 'UrbanCart Order',
                 },
-                'unit_amount': total * 100,  # Stripe uses paise
+                'unit_amount': total * 100,
             },
             'quantity': 1,
         }],
         mode='payment',
-            DOMAIN = "https://urbancart-5vuoc1pp9-arunkboby-5258s-projects.vercel.app"
-
-    success_url=f"{DOMAIN}/payment-success/"
-    cancel_url=f"{DOMAIN}/displaycart/"
+        success_url=f"{DOMAIN}/payment-success/",
+        cancel_url=f"{DOMAIN}/displaycart/",
     )
 
     return redirect(session.url)
