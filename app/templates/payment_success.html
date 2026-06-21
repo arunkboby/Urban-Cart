@@ -1,28 +1,15 @@
-{% extends 'base.html' %}
+from django.http import HttpResponse
 
-{% block title %}Payment Successful - UrbanCart{% endblock %}
+@login_required
+def payment_success(request):
+    try:
+        cart = Cart.objects.filter(user=request.user)
 
-{% block content %}
-<div class="container text-center mt-5">
-    <div class="card bg-dark text-white shadow-lg p-5">
-        <h1 class="text-success">✅ Payment Successful</h1>
+        subtotal = 0
+        for item in cart:
+            subtotal += item.quantity * item.product.price
 
-        <p class="mt-3">
-            Your payment has been processed successfully.
-        </p>
+        return HttpResponse("STEP 1 OK")
 
-        <p><strong>Order ID:</strong> #{{ order.id }}</p>
-        <p><strong>Total Amount:</strong> ₹{{ order.totalamount }}</p>
-        <p><strong>Payment Method:</strong> Card</p>
-        <p><strong>Status:</strong> Paid</p>
-
-        <a href="{% url 'displayorder' %}" class="btn btn-success mt-3">
-            View Orders
-        </a>
-
-        <a href="{% url 'home' %}" class="btn btn-outline-light mt-3">
-            Continue Shopping
-        </a>
-    </div>
-</div>
-{% endblock %}
+    except Exception as e:
+        return HttpResponse(f"ERROR STEP 1: {e}")
