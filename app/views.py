@@ -57,17 +57,31 @@ from django.http import HttpResponse
 
 @login_required
 def payment_success(request):
-    try:
-        cart = Cart.objects.filter(user=request.user)
+    cart = Cart.objects.filter(user=request.user)
 
-        subtotal = 0
-        for item in cart:
-            subtotal += item.quantity * item.product.price
+    subtotal = 0
+    for item in cart:
+        subtotal += item.quantity * item.product.price
 
-        return HttpResponse(f"SUCCESS DB WORKING. Cart items: {cart.count()}")
+    neworder = Order.objects.create(
+        userid=request.user,
+        totalamount=subtotal
+    )
 
-    except Exception as e:
-        return HttpResponse(f"ERROR: {str(e)}")
+    for item in cart:
+        OrderItem.objects.create(
+            orderid=neworder,
+            product=item.product,
+            quantity=item.quantity
+        )
+
+    cart.delete()
+
+    return render(
+        request,
+        "payment_success.html",
+        {"order": neworder}
+    )
 def func(request):
     return render(request,'home.html')
 
