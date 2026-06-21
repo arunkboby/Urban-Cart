@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 from pathlib import Path
 import os
 
@@ -33,13 +34,13 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 DEBUG = False
 
-
 ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
     ".vercel.app",
     "urbancart.website",
     "www.urbancart.website",
 ]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -53,7 +54,11 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'app',  # your app name, adjust if different
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
+    "https://urbancart.website",
+    "https://www.urbancart.website",
+]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
