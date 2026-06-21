@@ -53,47 +53,21 @@ def stripe_checkout(request):
 
 from django.core.mail import send_mail
 
+from django.http import HttpResponse
+
 @login_required
 def payment_success(request):
-    print("PAYMENT SUCCESS VIEW HIT")
-    cart = Cart.objects.filter(user=request.user)
-
-    subtotal = 0
-    for item in cart:
-        subtotal += item.quantity * item.product.price
-
-    neworder = Order.objects.create(
-        userid=request.user,
-        totalamount=subtotal
-    )
-
-    for item in cart:
-        OrderItem.objects.create(
-            orderid=neworder,
-            product=item.product,
-            quantity=item.quantity
-        )
-
     try:
-        if request.user.email:
-            send_mail(
-                f"UrbanCart Order #{neworder.id}",
-                f"Thank you for shopping with UrbanCart.\n\nOrder ID: {neworder.id}\nAmount: ₹{subtotal}",
-                settings.DEFAULT_FROM_EMAIL,
-                [request.user.email],
-                fail_silently=True,
-            )
+        cart = Cart.objects.filter(user=request.user)
+
+        subtotal = 0
+        for item in cart:
+            subtotal += item.quantity * item.product.price
+
+        return HttpResponse(f"SUCCESS DB WORKING. Cart items: {cart.count()}")
+
     except Exception as e:
-        print("EMAIL ERROR:", e)
-
-    cart.delete()
-
-    return render(
-        request,
-        "payment_success.html",
-        {"order": neworder}
-    )
-   
+        return HttpResponse(f"ERROR: {str(e)}")
 def func(request):
     return render(request,'home.html')
 
