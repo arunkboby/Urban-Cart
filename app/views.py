@@ -55,6 +55,7 @@ from django.core.mail import send_mail
 
 @login_required
 def payment_success(request):
+    print("PAYMENT SUCCESS VIEW HIT")
     cart = Cart.objects.filter(user=request.user)
 
     subtotal = 0
