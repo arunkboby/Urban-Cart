@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}{{ product.name }} - UrbanCart{% endblock %}
+
+{% block title %}Payment Successful - UrbanCart{% endblock %}
+
 {% block content %}
 <div class="container text-center mt-5">
     <div class="card bg-dark text-white shadow-lg p-5">
@@ -8,6 +10,11 @@
         <p class="mt-3">
             Your payment has been processed successfully.
         </p>
+
+        <p><strong>Order ID:</strong> #{{ order.id }}</p>
+        <p><strong>Total Amount:</strong> ₹{{ order.totalamount }}</p>
+        <p><strong>Payment Method:</strong> Card</p>
+        <p><strong>Status:</strong> Paid</p>
 
         <a href="{% url 'displayorder' %}" class="btn btn-success mt-3">
             View Orders
@@ -18,8 +25,4 @@
         </a>
     </div>
 </div>
-<p><strong>Payment Method:</strong> Card</p>
-<p><strong>Status:</strong> Paid</p>
-<p><strong>Amount:</strong> ₹{{ amount }}</p>
-<p><strong>Order ID:</strong> #{{ order.id }}</p>
 {% endblock %}
