@@ -29,6 +29,14 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # Adjust ALLOWED_HOSTS to include your Render app domain or allow all (for testing)
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
+DEBUG = False
+
+
+ALLOWED_HOSTS = [
+    ".vercel.app",
+    "urbancart.website",
+    "www.urbancart.website",
+]
 
 # Application definition
 
@@ -110,13 +118,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp.elasticemail.com'
-EMAIL_PORT = 2525
+EMAIL_HOST = 'in-v3.mailjet.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-
+EMAIL_HOST_USER = os.environ.get("MAILJET_API_KEY")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILJET_SECRET_KEY")
 DEFAULT_FROM_EMAIL = 'UrbanCart Team <urbancartmart@protonmail.com>'
 # Internationalization
 LANGUAGE_CODE = 'en-us'
