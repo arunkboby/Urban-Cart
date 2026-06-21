@@ -73,17 +73,17 @@ def payment_success(request):
             quantity=item.quantity
         )
 
-    print("Customer email:", request.user.email)
-
-    if request.user.email:
-        result = send_mail(
-            f"UrbanCart Order #{neworder.id}",
-            f"Thank you for shopping with UrbanCart.\n\nOrder ID: {neworder.id}\nAmount: ₹{subtotal}",
-            settings.DEFAULT_FROM_EMAIL,
-            [request.user.email],
-            fail_silently=False,
-        )
-        print("MAIL RESULT:", result)
+    try:
+        if request.user.email:
+            send_mail(
+                f"UrbanCart Order #{neworder.id}",
+                f"Thank you for shopping with UrbanCart.\n\nOrder ID: {neworder.id}\nAmount: ₹{subtotal}",
+                settings.DEFAULT_FROM_EMAIL,
+                [request.user.email],
+                fail_silently=True,
+            )
+    except Exception as e:
+        print("EMAIL ERROR:", e)
 
     cart.delete()
 
@@ -92,35 +92,6 @@ def payment_success(request):
         "payment_success.html",
         {"order": neworder}
     )
-
-    for item in cart:
-        OrderItem.objects.create(
-            orderid=neworder,
-            product=item.product,
-            quantity=item.quantity
-        )
-
-    if request.user.email:
-
-        print("Customer email:", request.user.email)
-        print("ABOUT TO SEND EMAIL")
-
-    result = send_mail(
-        f"UrbanCart Order #{neworder.id}",
-        f"""
-Thank you for shopping with UrbanCart.
-
-Order ID: {neworder.id}
-Amount: ₹{subtotal}
-Payment Status: Paid
-        """,
-        settings.DEFAULT_FROM_EMAIL,
-        [request.user.email],
-        fail_silently=False,
-    )
-
-    print("MAIL RESULT:", result)
-
    
 def func(request):
     return render(request,'home.html')
