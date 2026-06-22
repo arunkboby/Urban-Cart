@@ -34,6 +34,7 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
 DEBUG = False
 
 ALLOWED_HOSTS = [
+    "urbancart.duckdns.org",
     "127.0.0.1",
     "localhost",
     ".vercel.app",
