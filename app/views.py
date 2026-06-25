@@ -21,6 +21,7 @@ from .models import Cart, Order, OrderItem
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Avg
 from .models import Wishlist
+from .email_utils import send_order_email
 stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required
 def stripe_checkout(request):
@@ -554,6 +555,11 @@ def checkout_all(request):
             total += item.product.price * item.quantity
         order.totalamount = total
         order.save()
+        send_order_email(
+        customer_email=order.email,
+        customer_name=order.name,
+        order_id=order.id
+        )
         cart_items.delete()
         return redirect('displayorder')
     return redirect('displaycart')

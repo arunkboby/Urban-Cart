@@ -126,13 +126,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'in-v3.mailjet.com'
+EMAIL_HOST = 'smtp.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("MAILJET_API_KEY")
-EMAIL_HOST_PASSWORD = os.environ.get("MAILJET_SECRET_KEY")
-DEFAULT_FROM_EMAIL = 'UrbanCart Team <urbancartmart@protonmail.com>'
+EMAIL_HOST_USER = os.environ.get("OUTLOOK_EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("OUTLOOK_APP_PASSWORD")
+
+DEFAULT_FROM_EMAIL = f"UrbanCart <{EMAIL_HOST_USER}>"
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
