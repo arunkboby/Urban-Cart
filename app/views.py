@@ -58,6 +58,7 @@ from django.http import HttpResponse
 
 
 @login_required
+@login_required
 def payment_success(request):
     cart = Cart.objects.filter(user=request.user)
 
@@ -77,25 +78,14 @@ def payment_success(request):
             quantity=item.quantity
         )
 
+    # ADD THESE TWO LINES
+    print("EMAIL:", settings.EMAIL_HOST_USER)
+    print("PASSWORD EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
+
     if request.user.email:
         send_mail(
             subject=f"UrbanCart Order #{neworder.id} Confirmation",
-            message=f"""
-Hello {request.user.FirstName},
-
-Thank you for shopping with UrbanCart!
-
-Your payment was successful.
-
-Order ID: {neworder.id}
-Amount: ₹{subtotal}
-
-You can log in anytime to view your orders.
-
-Thank you for choosing UrbanCart!
-
-- UrbanCart Team
-""",
+            message="Test email",
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[request.user.email],
             fail_silently=False,
@@ -103,11 +93,7 @@ Thank you for choosing UrbanCart!
 
     cart.delete()
 
-    return render(
-        request,
-        "payment_success.html",
-        {"order": neworder}
-    )
+    return render(request, "payment_success.html", {"order": neworder})
 def func(request):
     return render(request,'home.html')
 
