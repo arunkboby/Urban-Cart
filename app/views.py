@@ -21,7 +21,7 @@ from .models import Cart, Order, OrderItem
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Avg
 from .models import Wishlist
-from .email_utils import send_order_email
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 @login_required
 def stripe_checkout(request):
@@ -31,7 +31,7 @@ def stripe_checkout(request):
     for item in cart:
         total += item.quantity * item.product.price
 
-        DOMAIN = request.build_absolute_uri("/")[:-1]
+    DOMAIN = request.build_absolute_uri("/")[:-1]
 
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
@@ -56,6 +56,7 @@ from django.core.mail import send_mail
 
 from django.http import HttpResponse
 
+
 @login_required
 def payment_success(request):
     cart = Cart.objects.filter(user=request.user)
@@ -74,6 +75,30 @@ def payment_success(request):
             orderid=neworder,
             product=item.product,
             quantity=item.quantity
+        )
+
+    if request.user.email:
+        send_mail(
+            subject=f"UrbanCart Order #{neworder.id} Confirmation",
+            message=f"""
+Hello {request.user.FirstName},
+
+Thank you for shopping with UrbanCart!
+
+Your payment was successful.
+
+Order ID: {neworder.id}
+Amount: ₹{subtotal}
+
+You can log in anytime to view your orders.
+
+Thank you for choosing UrbanCart!
+
+- UrbanCart Team
+""",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[request.user.email],
+            fail_silently=False,
         )
 
     cart.delete()
@@ -555,11 +580,7 @@ def checkout_all(request):
             total += item.product.price * item.quantity
         order.totalamount = total
         order.save()
-        send_order_email(
-        customer_email=order.email,
-        customer_name=order.name,
-        order_id=order.id
-        )
+        
         cart_items.delete()
         return redirect('displayorder')
     return redirect('displaycart')
