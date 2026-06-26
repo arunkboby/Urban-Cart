@@ -57,7 +57,12 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 
 
-@login_required
+
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
+
 @login_required
 def payment_success(request):
     cart = Cart.objects.filter(user=request.user)
@@ -78,40 +83,39 @@ def payment_success(request):
             quantity=item.quantity
         )
 
-    # ADD THESE TWO LINES
     print("EMAIL:", settings.EMAIL_HOST_USER)
     print("PASSWORD EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
     print("Logged in user:", request.user.username)
     print("Customer email:", request.user.email)
+
     if request.user.email:
-            from django.core.mail import EmailMultiAlternatives
-    from django.template.loader import render_to_string
 
-    items = OrderItem.objects.filter(orderid=neworder)
+        items = OrderItem.objects.filter(orderid=neworder)
 
-    html_content = render_to_string(
-        "emails/order_confirmation.html",
-        {
-            "user": request.user,
-            "order": neworder,
-            "items": items,
-            "subtotal": subtotal,
-        },
-    )
+        html_content = render_to_string(
+            "emails/order_confirmation.html",
+            {
+                "user": request.user,
+                "order": neworder,
+                "items": items,
+                "subtotal": subtotal,
+            },
+        )
 
-    email = EmailMultiAlternatives(
-        subject=f"🛒 UrbanCart Order #{neworder.id} Confirmed",
-        body="Thank you for shopping with UrbanCart!",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[request.user.email],
-    )
+        email = EmailMultiAlternatives(
+            subject=f"UrbanCart Order #{neworder.id} Confirmed",
+            body="Thank you for shopping with UrbanCart!",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[request.user.email],
+        )
 
-    email.attach_alternative(html_content, "text/html")
-    email.send()
+        email.attach_alternative(html_content, "text/html")
+        email.send()
+
     return render(
-    request,
-    "payment_success.html",
-    {"order": neworder}
+        request,
+        "payment_success.html",
+        {"order": neworder}
     )
 def func(request):
     return render(request,'home.html')
