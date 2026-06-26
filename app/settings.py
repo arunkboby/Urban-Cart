@@ -131,8 +131,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("BREVO_LOGIN")
 EMAIL_HOST_PASSWORD = os.environ.get("BREVO_SMTP_KEY")
 
-DEFAULT_FROM_EMAIL = f"UrbanCart <{os.environ.get('DEFAULT_FROM_EMAIL')}>"
-# Internationalization
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    "urbancarthub@outlook.com"
+)# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
