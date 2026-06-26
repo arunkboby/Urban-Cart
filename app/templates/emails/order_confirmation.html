@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UrbanCart Order Confirmation</title>
+</head>
+
+<body style="margin:0;padding:0;background:#eaeded;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eaeded;padding:30px 0;">
+<tr>
+<td align="center">
+
+<table width="600" cellpadding="0" cellspacing="0" border="0"
+style="background:#ffffff;border:1px solid #d5d9d9;border-radius:8px;overflow:hidden;">
+
+<!-- Logo -->
+
+<tr>
+<td style="padding:25px 30px 20px 30px;">
+<img
+src="https://res.cloudinary.com/dyrmbjwfl/image/upload/v1782455139/logo_ogluo0.jpg"
+alt="UrbanCart"
+width="140"
+style="display:block;border:0;">
+</td>
+</tr>
+
+<tr>
+<td style="border-top:1px solid #e7e7e7;"></td>
+</tr>
+
+<!-- Header -->
+
+<tr>
+<td style="padding:30px 30px 15px 30px;">
+
+<h1 style="
+margin:0;
+font-size:28px;
+font-weight:400;
+color:#111111;">
+Order Confirmation
+</h1>
+
+<p style="
+margin-top:25px;
+font-size:16px;
+color:#111111;
+line-height:1.6;">
+
+Hello {{ user.FirstName }},
+
+</p>
+
+<p style="
+font-size:16px;
+color:#111111;
+line-height:1.7;">
+
+Thank you for shopping with <strong>UrbanCart</strong>.
+Your order has been successfully placed and your payment has been confirmed.
+
+</p>
+
+</td>
+</tr>
+
+<!-- Order Details -->
+
+<tr>
+<td style="padding:0 30px 30px 30px;">
+
+<table width="100%"
+cellpadding="0"
+cellspacing="0"
+style="
+border:1px solid #d5d9d9;
+border-collapse:collapse;">
+
+<tr style="background:#f7fafa;">
+<td colspan="2"
+style="
+padding:14px;
+font-size:18px;
+font-weight:bold;
+border-bottom:1px solid #d5d9d9;">
+Order Details
+</td>
+</tr>
+
+<tr>
+<td style="
+padding:14px;
+font-weight:bold;
+width:40%;
+border-bottom:1px solid #d5d9d9;">
+Order ID
+</td>
+
+<td style="
+padding:14px;
+border-bottom:1px solid #d5d9d9;">
+#UC-{{ order.id|stringformat:"06d" }}
+</td>
+</tr>
+
+<tr>
+<td style="
+padding:14px;
+font-weight:bold;
+border-bottom:1px solid #d5d9d9;">
+Order Date
+</td>
+
+<td style="
+padding:14px;
+border-bottom:1px solid #d5d9d9;">
+{{ order.created_at|date:"d M Y, h:i A" }} IST
+</td>
+</tr>
+
+<tr>
+<td style="
+padding:14px;
+font-weight:bold;
+border-bottom:1px solid #d5d9d9;">
+Payment Status
+</td>
+
+<td style="
+padding:14px;
+border-bottom:1px solid #d5d9d9;">
+Paid
+</td>
+</tr>
+
+<tr>
+<td style="
+padding:14px;
+font-weight:bold;">
+Order Total
+</td>
+
+<td style="
+padding:14px;
+font-size:20px;
+font-weight:bold;">
+₹{{ subtotal }}
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<!-- Items -->
+
+<tr>
+<td style="padding:0 30px 30px 30px;">
+
+<table width="100%"
+cellpadding="0"
+cellspacing="0"
+style="
+border:1px solid #d5d9d9;
+border-collapse:collapse;">
+
+<tr style="background:#f7fafa;">
+<td colspan="3"
+style="
+padding:14px;
+font-size:18px;
+font-weight:bold;
+border-bottom:1px solid #d5d9d9;">
+Items Ordered
+</td>
+</tr>
+
+<tr>
+<th align="left"
+style="
+padding:12px;
+border-bottom:1px solid #d5d9d9;">
+Product
+</th>
+
+<th align="center"
+style="
+padding:12px;
+border-bottom:1px solid #d5d9d9;">
+Qty
+</th>
+
+<th align="right"
+style="
+padding:12px;
+border-bottom:1px solid #d5d9d9;">
+Price
+</th>
+</tr>
+
+{% for item in items %}
+
+<tr>
+<td style="
+padding:12px;
+border-bottom:1px solid #eeeeee;">
+{{ item.product.name }}
+</td>
+
+<td align="center"
+style="
+padding:12px;
+border-bottom:1px solid #eeeeee;">
+{{ item.quantity }}
+</td>
+
+<td align="right"
+style="
+padding:12px;
+border-bottom:1px solid #eeeeee;">
+₹{{ item.product.price }}
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</td>
+</tr>
+
+<!-- Button -->
+
+<tr>
+<td align="center" style="padding:10px 30px 40px 30px;">
+
+<a
+href="https://urbancart.duckdns.org/displayorder/"
+style="
+background:#007185;
+color:#ffffff;
+padding:14px 30px;
+text-decoration:none;
+border-radius:4px;
+font-size:15px;
+font-weight:bold;
+display:inline-block;">
+
+View Your Orders
+
+</a>
+
+</td>
+</tr>
+
+<!-- Footer -->
+
+<tr>
+<td style="
+background:#f7fafa;
+padding:30px;
+border-top:1px solid #d5d9d9;">
+
+<p style="
+margin:0;
+font-size:14px;
+color:#565959;
+line-height:1.8;">
+
+Thank you for choosing UrbanCart.<br><br>
+
+If you have questions regarding your order,
+please contact our support team.<br><br>
+
+<strong>UrbanCart Customer Support</strong><br>
+[urbancarthub@outlook.com](mailto:urbancarthub@outlook.com)<br>
+https://urbancart.duckdns.org<br><br>
+
+© {% now "Y" %} UrbanCart. All rights reserved.
+
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

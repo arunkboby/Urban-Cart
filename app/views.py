@@ -81,19 +81,38 @@ def payment_success(request):
     # ADD THESE TWO LINES
     print("EMAIL:", settings.EMAIL_HOST_USER)
     print("PASSWORD EXISTS:", bool(settings.EMAIL_HOST_PASSWORD))
-
+    print("Logged in user:", request.user.username)
+    print("Customer email:", request.user.email)
     if request.user.email:
-        send_mail(
-            subject=f"UrbanCart Order #{neworder.id} Confirmation",
-            message="Test email",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[request.user.email],
-            fail_silently=False,
-        )
+            from django.core.mail import EmailMultiAlternatives
+    from django.template.loader import render_to_string
 
-    cart.delete()
+    items = OrderItem.objects.filter(orderid=neworder)
 
-    return render(request, "payment_success.html", {"order": neworder})
+    html_content = render_to_string(
+        "emails/order_confirmation.html",
+        {
+            "user": request.user,
+            "order": neworder,
+            "items": items,
+            "subtotal": subtotal,
+        },
+    )
+
+    email = EmailMultiAlternatives(
+        subject=f"🛒 UrbanCart Order #{neworder.id} Confirmed",
+        body="Thank you for shopping with UrbanCart!",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[request.user.email],
+    )
+
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+    return render(
+    request,
+    "payment_success.html",
+    {"order": neworder}
+    )
 def func(request):
     return render(request,'home.html')
 

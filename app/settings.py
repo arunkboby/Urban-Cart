@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-from pathlib import Path
-import os
-
+from dotenv import load_dotenv
 from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -124,16 +124,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST = "smtp-relay.brevo.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("OUTLOOK_EMAIL")
-EMAIL_HOST_PASSWORD = os.environ.get("OUTLOOK_APP_PASSWORD")
+EMAIL_HOST_USER = os.environ.get("BREVO_LOGIN")
+EMAIL_HOST_PASSWORD = os.environ.get("BREVO_SMTP_KEY")
 
-DEFAULT_FROM_EMAIL = f"UrbanCart <{EMAIL_HOST_USER}>"
+DEFAULT_FROM_EMAIL = f"UrbanCart <{os.environ.get('DEFAULT_FROM_EMAIL')}>"
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -193,3 +193,7 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
+LANGUAGE_CODE = 'en-in'
+TIME_ZONE = 'Asia/Kolkata'
+USE_I18N = True
+USE_TZ = True
