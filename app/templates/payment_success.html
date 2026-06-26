@@ -3,77 +3,6 @@
 {% block title %}Payment Successful - UrbanCart{% endblock %}
 
 {% block content %}
-<div class="container text-center mt-5">
-    <div class="card shadow-lg p-5">
-
-        <h1 class="text-success">✅ Payment Successful</h1>
-
-        <p class="mt-3">
-            Thank you for shopping with UrbanCart.
-        </p>
-
-        <hr>
-
-        <p><strong>Order ID:</strong> #{{ order.id }}</p>
-        <p><strong>Amount:</strong> ₹{{ order.totalamount }}</p>
-        <p><strong>Status:</strong> Paid</p>
-        <p><strong>Payment Method:</strong> Card</p>
-
-        <a href="{% url 'displayorder' %}" class="btn btn-success mt-3">
-            View Orders
-        </a>
-
-        <a href="{% url 'home' %}" class="btn btn-outline-secondary mt-3">
-            Continue Shopping
-        </a>
-
-    </div>
-</div>
-
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-<script>
-emailjs.init("YOUR_PUBLIC_KEY");
-
-emailjs.send(
-    "YOUR_SERVICE_ID",
-    "YOUR_TEMPLATE_ID",
-    {
-        customer_name: "{{ request.user.FirstName }}",
-        customer_email: "{{ request.user.email }}",
-        order_id: "UC-{{ order.id }}",
-        order_date: "{{ order.created_at|date:'d M Y, h:i A' }} IST",
-        total: "{{ order.totalamount }}",
-
-        products_html: `
-        {% for item in order.orderitem_set.all %}
-        <tr>
-            <td style="padding:12px;border-bottom:1px solid #eee;">
-                {{ item.product.name }}
-            </td>
-            <td align="center"
-                style="padding:12px;border-bottom:1px solid #eee;">
-                {{ item.quantity }}
-            </td>
-            <td align="right"
-                style="padding:12px;border-bottom:1px solid #eee;">
-                ₹{{ item.product.price }}
-            </td>
-        </tr>
-        {% endfor %}
-        `,
-
-        year: "2026"
-    }
-)
-.then(function() {
-    console.log("Order email sent");
-})
-.catch(function(error) {
-    console.log(error);
-});
-</script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
@@ -86,15 +15,30 @@ emailjs.send(
         customer_name: "{{ request.user.FirstName }}",
         customer_email: "{{ request.user.email }}",
         order_id: "UC-{{ order.id }}",
-        total: "{{ order.totalamount }}"
+        order_date: "{{ order.created_at|date:'d M Y, h:i A' }} IST",
+        total: "{{ order.totalamount }}",
+
+        products_html: `
+        {% for item in items %}
+        <tr>
+            <td style="padding:12px;border-bottom:1px solid #eee;">
+                {{ item.product.name }}
+            </td>
+            <td align="center" style="padding:12px;border-bottom:1px solid #eee;">
+                {{ item.quantity }}
+            </td>
+            <td align="right" style="padding:12px;border-bottom:1px solid #eee;">
+                ₹{{ item.product.price }}
+            </td>
+        </tr>
+        {% endfor %}
+        `,
+
+        year: "2026"
     }
 )
-.then(function() {
-    console.log("Email sent");
-})
-.catch(function(error) {
-    console.log(error);
-});
+.then(() => console.log("Order email sent"))
+.catch(err => console.log(err));
 </script>
 
 {% endblock %}
